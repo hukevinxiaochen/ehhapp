@@ -1,4 +1,4 @@
-require "grit"
+require "rugged"
 require "rdiscount"
 require "lockfile"
 require_relative "core_ext"
@@ -101,7 +101,7 @@ module GitWiki
     def self.create_blob_for(page_name, data = "")
       # Note that Grit::Blob.create does not save anything to the repo
       # The blob is "unbaked" and only exists within memory
-      Grit::Blob.create(repository, {
+      Rugged::Blob.create(repository, {
         :name => page_name + extension,
         :data => data
       })
@@ -241,7 +241,7 @@ module GitWiki
       end  # ... UNLOCK
       
       other_metadata, other_body = extract_front_matter(other_blob.data)
-      if Grit::Merge.new(merged_body).conflicts == 0
+      if Rugged::Merge.new(merged_body).conflicts == 0
         new_content = prepare_new_content(author, merged_body, other_metadata, false)
         initialize(self.class.create_blob_for(name, new_content), branch_name)
       else
@@ -334,7 +334,7 @@ module GitWiki
     
     # Turns an author's username into a Grit::Actor for the purposes of committing
     def actor(author)
-      author ? Grit::Actor.new(author, author) : nil
+      author ? Rugged::Actor.new(author, author) : nil
     end
 
     # Creates a standardized commit message for each kind of action

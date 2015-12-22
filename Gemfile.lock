@@ -41,6 +41,7 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
+    rugged (0.23.3)
     sinatra (1.4.6)
       rack (~> 1.4)
       rack-protection (~> 1.4)
@@ -69,5 +70,9 @@ DEPENDENCIES
   rdiscount
   require_all
   rspec
+  rugged
   sinatra
   sinatra-contrib
+
+BUNDLED WITH
+   1.11.2

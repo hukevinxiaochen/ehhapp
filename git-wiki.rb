@@ -1,7 +1,7 @@
 require "sinatra/base"
 require "sinatra/json"
 require "rack/csrf"
-require "grit"
+require "rugged"
 require "yaml"
 require "require_all"
 require "rdiscount"
@@ -28,7 +28,7 @@ module GitWiki
     self.homepage   = homepage
     self.extension  = extension
     self.config.deep_merge!(YAML::load(File.open(config))) if File.file?(config)
-    self.repository = Grit::Repo.new(self.config["repo"])
+    self.repository = Rugged::Repository.new(self.config["repo"])
     self.mdown_examples = self.config["mdown_examples"].map do |ex|
       { 
         "mdown" => ex,
@@ -194,7 +194,7 @@ module GitWiki
       head_id = params[:head]
       commit_display = 5
       commit_list = []
-      Grit::Commit.find_all(GitWiki.repository, head_id, {:skip => 1}).each do |com|
+      Rugged::Commit.find_all(GitWiki.repository, head_id, {:skip => 1}).each do |com|
         if com.message =~ /#{params[:page]}\z/
           commit_list << {"id" => com.id, "author" => com.author.to_s, "authored" => com.authored_date.strftime("%T on %m/%d/%Y"), 
                           "commited" => com.committed_date.strftime("%T on %m/%d/%Y"), "commiter" => com.committer.to_s,
