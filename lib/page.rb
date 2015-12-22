@@ -106,14 +106,25 @@ module GitWiki
         :data => data
       })
     end
+    
+    def self.find_branch(page_name, author)
+      repository.branches["#{author}/#{page_name}"]
+    end
+
+    def self.find_master_blob(page_name)
+      return nil if repository.head_unborn?
+      repository.head.target.tree[page_name + extension]
+    end
 
     def self.find_blob(page_name, author = nil)
       # If the author was specified, look for the blob in the author's topic branch first
-      blob = repository.tree("#{author}/#{page_name}")/(page_name + extension) if author
+      branch = find_branch(page_name, author) if author
+      blob = branch.target.tree[page_name + extension] if branch
       on_branch = "#{author}/#{page_name}" if blob
+      
       # If we didn't find the blob on the author's topic branch, get it from the master branch
-      blob ||= repository.tree/(page_name + extension)
-      [blob, on_branch]
+      blob ||= find_master_blob(page_name)
+      [blob, on_branch]  
     end
     private_class_method :find_blob
     
