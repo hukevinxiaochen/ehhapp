@@ -15,5 +15,8 @@ gem 'rack-session-file'
 gem 'rack_csrf'
 gem 'mail'
 gem 'lockfile'
-gem 'rspec'
 gem 'rugged'
+
+group :test do
+  gem 'rspec'
+end
