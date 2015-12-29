@@ -186,15 +186,15 @@ module GitWiki
     end
 
     def new?
-      @blob.id.nil? && @blob.data == ""
+      @blob[:oid].nil? && content == ""
     end
 
     def name
-      @blob.name.gsub(/#{File.extname(@blob.name)}$/, '')
+      @blob[:name].gsub(/#{File.extname(@blob[:name])}$/, '')
     end
 
     def content
-      @blob.data
+      GitWiki.repository.lookup(@blob[:oid]).content
     end
     
     def on_branch?
